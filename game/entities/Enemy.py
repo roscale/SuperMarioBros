@@ -45,7 +45,7 @@ class InverseXVelocity(Script):
 
 		physics = self.gameObject.getComponent(Physics)
 
-		if "Solid" in other.tags:
+		if "Solid" in other.tags or "MovingEnemy" in other.tags:
 			if (side == Sides.RIGHT_SIDE and physics.velocity.x > 0) or \
 				(side == Sides.LEFT_SIDE and physics.velocity.x < 0):
 				physics.velocity.x *= -1
