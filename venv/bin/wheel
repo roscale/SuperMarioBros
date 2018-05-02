@@ -1,0 +1,11 @@
+#!/home/roscale/Downloads/SMB-20180202T164009Z-001/SMB/venv1/bin/python3.6
+
+# -*- coding: utf-8 -*-
+import re
+import sys
+
+from wheel.tool import main
+
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw?|\.exe)?$', '', sys.argv[0])
+    sys.exit(main())

@@ -1,0 +1,184 @@
+# 28 janvier 2018
+
+https://pyglet.readthedocs.io/en/pyglet-1.3-maintenance/
+http://steveasleep.com/pyglettutorial.html#intro
+
+J'ai choisi pyglet au lieu de pygame car il utilise l'acceleration graphique par OpenGL. Le processeur n'est pas assez puissant de dessiner toutes les images à l'écran.
+
+Développement:
+
+Créer une classe World
+Créer une fenêtre.
+Afficher le conteur de FPS.
+Lier la méthode on_update et on_draw
+
+Créer une classe GameObject
+Ajouer une liste components et écrire des méthodes pour gérer les composants: get, add, remove
+
+Créer une classe abstraite Component qui tient la référence du GameObject attaché et les manageurs dont il appartient.
+Créer la composante Transform: position, depth, translate
+Pour la position, j'ai écrit moi-même une classe Vector2 qui semble à celui de Pygame mais elle travaille avec les nombres flottants.
+Ajouter par défaut une composante Transform
+
+Écrire une méthode pour pouvoir instancier des GameObjects dans le monde
+Écrire le test d'instantiation, composante transform
+
+Créer une classe abstraite Manager et une intérface IManageable
+Créer une intérface IDrawable pour rassembler tous les objets qui sont dessinable dans le DrawingManager
+
+Créer la composante SpriteRenderer qui implémente IDrawable et qui dessine un Sprite pyglet à la position de la composante Transform
+[Screenshot]
+
+http://natureofcode.com/book/chapter-2-forces/
+Créer la composante Physics et le manageur de physiques
+Ajouter une gravité globale au manageur et une gravité spécifique à la composante
+
+Problèmes:
+    On a besoin de singletons pour les manageurs, sinon ayant une classe statique toutes les composantes vont être ensemble dans tous les manageurs.
+    -> copié le fichier Singleton.py
+
+# 29 janvier 2018
+Créer une classe abstraite InputManager qui va écouter les evenements de souris et clavier, on redirige pratiquement les evenements de pyglet vers les methodes écrites dans la classe.
+
+# 30 janvier 2018
+Créer une interface "IEvents" avec une implémentation par défaut avec tous les evenements possibles du moteur, input, collisions etc.
+Créer la classe Script qui implémente l'intérface IEvents qui pourra être attaché à un GameObject.
+
+# 31 janvier 2018
+Créer une classe Camera qui sera un GameObject particulier et un manageur.
+Permettre d'avoir 2 projéctions, world and hud.
+Avoir un zoom pour la projection world.
+size and windowPosition property
+order property, trie la liste des caméras dans le CameraManager
+
+-> Modifier la méthode pour dessiner, prend chaque caméra et dessine par rapport à elle les objets autour.
+
+# 1 février 2018
+Finir l'intégration input
+
+Créer la classe abstraite Timer.
+Ajouter ou effacer des entries.
+callback, args, startDelay, interval, cycles
+
+Résoudre un problème avec le drag -> retenir l'objet et la caméra qui on est entrain de déplacer
+
+Collider, CollisionManager, utilisation de la librairie pyqtree pour la répartition spatiale.
+Ajouter les nouveaux evenements dans Events.
+Avoir une méthode globale en World qui décide si 2 objets vont entrer en collision ou pas. -> function pointer
+
+# 2 février 2018
+Créer une intérface IResizable pour les composantes qui ont une surface. Ils peuvent avoir une dimension, un offset à partir de l'objet de base, transform.
+Optimiser la méthode de déssinage, utiliser des batches, activer le DEPTH_TEST
+
+# 3 février 2018
+Ajouter la propriété order à l'intérface IResizable, trier les composantes par rapport à ça, utiliser des OrderedGroups
+Créer le fichier tfe.py
+https://gist.github.com/TheMengzor/968e5ea87e99d9c41782
+
+Séparer l'intérface IResizable, créer l'intérface IOrderable
+Commencer enfin le jeu :P
+
+Fournir la méthode init(pas le constructeur) pour séparer le constructeur de l'initialization du GameObject
+Créer un queue pour initialiser les composantes à cause des problèmes d'initialisation
+
+Fonction clamp
+drag physics
+
+onUpdate, onLateUpdate
+
+Résoudre la physique à un framerate différent
+https://gamedev.stackexchange.com/questions/80081/frame-rate-independent-friction-on-movement-in-2d-game
+NOPE, PROBLÈME, c dur :(, j'ai laissé tombé.
+
+commencer la classe Player. Walk -> Jump
+(State Pattern)
+
+Optimisation du rendering
+au lieu de bouger tous les sprites, je bouge l'origine du monde avec glTranslatef()
+
+Frustum culling, ajouter des objets dans le monde diminue le fps considérablement
+https://gamedev.stackexchange.com/questions/66280/what-are-the-common-rendering-optimization-techniques-for-the-geometry-pass-in-a
+https://gamedev.stackexchange.com/questions/14713/culling-for-a-2d-platformer-game
+
+# 5 février 2018
+Créer la classe FrustumCulling, enlever témporairement le batching, je verrai ça plus tard si j'aurai encore des soucis avec les performances
+
+# 6 février 2018
+Méthode onDestroy sur les composates + gameObject. destructionQueue
+Modifier l'algo des collisions pour supporter l'entrée en collision avec plusieurs objets en même temps.
+Ajouter des tags et pouvoir les trouver
+World.destroy avec delay en utilisant le timeur actuel
+Créer les bloques nécessaires pour le premier niveau de SMB et placer tous les bloques pour simuler le premier niveau.
+
+# 10 février 2018
+Prévenir à effacer 2 fois une composante
+Effacer tous les queues, avoir un seul dont j'envoie des fonctions à appeler (callbacks).
+
+# 12 février 2018
+Réécrire le manageur de collisions. Trier les movements par la longueur du vecteur.
+Finir la fonctionalité de KoopaTroopa avec tous ses états, Walk, Stomped, Bowling et Recovery.
+
+# 15 février 2018
+Utiliser + de typing. Types explicites
+Commencer à introduire le player Big.
+
+# 16 février 2018
+Continuer le developpement du Mario Big.
+Transition entre Big et Small
+Fire Mario ;D, killing enemies with fire balls, fire ball explosion
+
+# 17 février 2018
+Bcpppp de choses :P
+Passive mode quand on reçoit damage.
+Tous les powerups fonctionnent: mushroom, flower, star, 1up.
+Customiser les briques, question blocks et les blocs invisibles avec des items particuliers.
+J'ai accompli tout ce que je voilais faire pour aujourd'hui :D, deadline accomplished.
+
+# 19 février 2018
+J'ai décidé de faire mon niveau en Tiled, il était le temps de sauvegarder ça dehors le code.
+J'ai appris un peu à utiliser Tiled et j'ai trouvé une librairie (PyTMX) pour parser les fichiers générés par Tiled en python
+
+# 20 février 2018
+Après avoir faire le niveau 1-1 en Tiled j'ai essayé de charger les objets à l'aide de la librairie. Malheureusement elle ne supporte pas l'héritage des propriétés.
+
+# 21, 22 février 2018
+J'ai ajouté du code dans la librairie pour que ça fonctionne.
+J'ai fait le niveau 1-2 dans Tiled et j'ai ajouté aux blocs la possibilité de changer de thème (overworld -> underground)
+
+# 23 février 2018
+Scènes et manageur de scènes pour pouvoir changer les niveaux.
+
+# 24 février 2018
+J'ai créé la composante TextRenderer.
+Difficultés: charger une police de caractères locale, ça ne marche pas.
+
+# 25 février 2018
+Créer le HUD: les classes Score, Coins, Level et Time
+
+# 24 mars 2018
+Finir le PihraniaPlant, damage.
+Player crouch.
+
+# 25 mars 2018
+Commencer le drapeau de fin.
+Ajouter la musique du fond.
+
+# 5 avril 2018
+Résolu qqs problèmes avec le HUD Timer
+Possibilité d'entrer dans les pipes (sans animation encore)
+
+# 6 avril 2018
+J'ai commencé le niveau 1-3 et 1-4 dans Tiled
+
+# 10 avril 2018
+J'ai fait la platforme qui bouge de bas en haut, j'ai modifié un peu le système des collisions, j'ai introduit la variable masse dans la composante
+Physics. this.mass < other.mass ? this.clampoff(other) : other.clampoff(this) pour pousser le player en haut(up platform)
+
+# 15 avril 2018
+J'ai fini les platformes qui vont de bas en haut et à moitié completé de gauche à droite.
+Les plateformes qui vont de gauche à droite ne bougent pas le Player avec elles car c'est une limitation du moteur.
+Bug mineur qui ne sera pas corrigé car je dois réimaginer le moteur de physiques.
+
+# Voyage rhéto...
+
+# Github upload
