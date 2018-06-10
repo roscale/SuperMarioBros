@@ -13,7 +13,7 @@ class SceneManager:
 	def __init__(self):
 		self.currentScene = None
 
-	def loadScene(self, Class: Type[Scene]):
+	def loadScene(self, Class: Type[Scene], *args, **kwargs):
 		for gameObject in World.gameObjects:
 			if not gameObject.keepBetweenScenes:
 				World.destroy(gameObject)
@@ -21,5 +21,5 @@ class SceneManager:
 		scene = Class()
 		scene.mainCamera = World.instantiate(Camera, (0, 0))
 		scene.mainCamera.tags.append("MainCamera")
-		scene.onLoad()
+		scene.onLoad(*args, **kwargs)
 		self.currentScene = scene

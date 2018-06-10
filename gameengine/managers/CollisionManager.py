@@ -46,7 +46,7 @@ class ColliderMovement:
 		self.dy = dy
 
 	# One has higher priority than the other if it has bigger movement
-	# Fix a the bug Player running into KoopaTroopa
+	# TODO: Player dies running into KoopaTroopa
 	def __lt__(self, other):
 		return self.dx ** 2 + self.dy ** 2 > other.dx ** 2 + other.dy ** 2
 
@@ -88,7 +88,6 @@ class CollisionManager(Manager[Collider]):
 
 	def add(self, object: Collider):
 		super().add(object)
-		# print("RECT", (*object.rect.topLeft, *(object.rect.topLeft + object.rect.size)))
 		self.quadtree.insert(object, (*object.rect.topLeft, *(object.rect.topLeft + object.rect.size)))
 
 	def remove(self, object: Collider):
@@ -107,10 +106,6 @@ class CollisionManager(Manager[Collider]):
 		self.movementQueue.put(ColliderMovement(collider, dx, dy))
 
 	def onUpdate(self, dt: float):
-		# Set isColliding
-		for col in self.collection:
-			col.isColliding = False
-
 		evaluatedStayPairs: List[Pair[Collider]] = []
 
 		while not self.movementQueue.empty():
@@ -153,17 +148,13 @@ class CollisionManager(Manager[Collider]):
 						collider.isColliding = True
 						other.isColliding = True
 
-					# print(pair.first.gameObject, pair.second.gameObject)
-					# from gameengine.core.World import World
-					# print(World.frameCount)
-
 					dispatchStayCollision(pair.first, pair.second)
 					evaluatedStayPairs.append(pair)
 
 			exitPairs = [pair for pair in self.stayPairs if
 			             pair.contains(movement.collider) and pair.other(movement.collider) not in intersection]
+
 			for pair in exitPairs:
-				# print(pair.first.gameObject, pair.second.gameObject)
 				def dispatchExitCollision(collider, other):
 					for script in collider.gameObject.scripts:
 						script.onCollisionExit(other.gameObject)
@@ -237,16 +228,3 @@ class CollisionManager(Manager[Collider]):
 
 					if pair not in self.stayPairs:
 						self.stayPairs.append(pair)
-
-	def doCollide(self, collider, other):
-		return False
-
-		# pairToCheck = Pair(collider, other)
-		#
-		# print(self.inCollisionPairs)
-		#
-		# for pair in self.inCollisionPairs:
-		# 	print(pair)
-		# 	if pair == pairToCheck:
-		# 		return True
-		# return False

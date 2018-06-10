@@ -11,19 +11,25 @@ from gameengine.core.World import World
 
 
 class QuestionBlock(Block):
-	def init(self, item: Type = None, *args, **kwargs):
+	def init(self, item: Type = None, disabled = False, *args, **kwargs):
 		super().init(*args, **kwargs)
-		self.itemClass = item
-		if self.itemClass is None:
-			self.itemClass = RotatingCoin
-
-		self.hit = False
 
 		spriteRenderer = self.getComponent(SpriteRenderer)
-		spriteRenderer.setImage(Resources.theme[self.theme]["questionBlock"])
+		if not disabled:
+			self.itemClass = item
+			if self.itemClass is None:
+				self.itemClass = RotatingCoin
+
+			self.hit = False
+			spriteRenderer.setImage(Resources.theme[self.theme]["questionBlock"])
+
+		else:
+			self.hit = True
+			spriteRenderer.setImage(Resources.theme[self.theme]["questionBlockHit"])
+
 
 		self.getComponent(Collider).size = spriteRenderer.size
-		self.getComponent(Input).size = spriteRenderer.size
+		# self.getComponent(Input).size = spriteRenderer.size
 
 	def trigger(self):
 		if not self.hit:

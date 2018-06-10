@@ -53,6 +53,8 @@ class KoopaTroopa(Enemy):
 		# spriteRenderer.setImage(Resources.goombaFlipped)
 		spriteRenderer.sprite.scale_y = -1
 
+		World.findByTag("Score")[0].add(200)
+
 		World.destroy(self, 1000)
 
 
@@ -114,6 +116,8 @@ class KoopaTroopaScript(Script):
 				self.script.state = KoopaTroopaScript.Recovering(self.script)
 
 			self.recoverTimer = Timer.add(recover, (), 2500, 0, 1)
+
+			World.findByTag("Score")[0].add(20)
 
 		def onCollisionEnter(self, other, side):
 			if "Player" in other.tags:
@@ -177,6 +181,8 @@ class KoopaTroopaScript(Script):
 			self.koopaTroopa.getScript(InverseXVelocity).ignoreEntities = True
 
 			Resources.kick.play().volume = 0.05
+
+			World.findByTag("Score")[0].add(100)
 
 		def onCollisionEnter(self, other, side):
 			if "Player" in other.tags and side == Sides.TOP_SIDE:

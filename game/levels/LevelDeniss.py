@@ -37,21 +37,6 @@ class LevelDeniss(Scene):
 
 		LevelLoader.loadMap("res/maps/levelDeniss.tmx", getClassByName)
 
-		# def f():
-		# 	World.instantiate(Goomba, (tileSizeNum * 44, tileSizeNum * 11))
-		# 	World.instantiate(Goomba, (tileSizeNum * 46, tileSizeNum * 11))
-		#
-		# onGroundY = tileSize.y * 2
-		# World.instantiate(Trigger, (tileSizeNum * 24, onGroundY), (1, 1000), "Player", f)
-		#
-		# World.instantiate(KoopaTroopa, (tileSizeNum * 29, tileSizeNum * 11), smart=True)
-		#
-		# World.instantiate(Platform, (tileSizeNum * 54.5, 0), Platform.SmoothUpDown, tileSizeNum * 9)
-		# World.instantiate(Platform, (tileSizeNum * 82, tileSizeNum * 5), Platform.SmoothLeftRight, tileSizeNum * 85.5)
-		# World.instantiate(Platform, (tileSizeNum * 89, tileSizeNum * 4), Platform.SmoothLeftRight, tileSizeNum * 93.5)
-		# World.instantiate(Platform, (tileSizeNum * 129, tileSizeNum * 8), Platform.SmoothLeftRight, tileSizeNum * 131.5)
-		#
-
 		if not World.findByTag("Player"):
 			onGroundY = tileSize.y * 2
 			player = World.instantiate(Player, (tileSizeNum * 5, onGroundY))

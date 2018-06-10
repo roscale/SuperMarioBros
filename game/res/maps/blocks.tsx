@@ -90,4 +90,14 @@
    <property name="theme" value="ug"/>
   </properties>
  </tile>
+ <tile id="795" type="Wave">
+  <properties>
+   <property name="theme" value="castle"/>
+  </properties>
+ </tile>
+ <tile id="828" type="Liquid">
+  <properties>
+   <property name="theme" value="castle"/>
+  </properties>
+ </tile>
 </tileset>

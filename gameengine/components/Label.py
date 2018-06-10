@@ -16,7 +16,6 @@ class Label(GameObject, pyglet.text.Label, IManageable, IDrawable):
 		self._managers = []
 
 		self._order = 0
-		self.hud = False
 
 		from gameengine.managers.DrawingManager import DrawingManager
 		DrawingManager().add(self)
@@ -39,4 +38,3 @@ class Label(GameObject, pyglet.text.Label, IManageable, IDrawable):
 		self.x = int(coords.x)
 		self.y = int(coords.y)
 		super().draw()
-

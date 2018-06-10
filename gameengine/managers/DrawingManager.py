@@ -51,33 +51,3 @@ class DrawingManager(Manager[SpriteRenderer]):
 
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-
-		# for textRenderer in self.collection:
-		# 	if isinstance(textRenderer, TextRenderer):
-		# 		for camera in CameraManager().collection:
-		# 			if textRenderer.hud:
-		# 				camera.hudProjection()
-		#
-		# 			else:
-		# 				glMatrixMode(GL_MODELVIEW)
-		# 				glLoadIdentity()
-		# 				glViewport(int(camera._windowPosition.x), int(camera._windowPosition.y), int(camera._size.x),
-		# 				           int(camera._size.y))
-		#
-		# 				glMatrixMode(GL_PROJECTION)
-		# 				glLoadIdentity()
-		#
-		# 				inverseZoom = 1 / camera.zoom
-		#
-		# 				# gluOrtho2D(-halfWidth * inverseZoom, halfWidth * inverseZoom, -halfHeight * inverseZoom, halfHeight * inverseZoom)
-		# 				gluOrtho2D(0, camera._size.x * inverseZoom, 0, camera._size.y * inverseZoom)
-		# 				glTranslatef(-camera.transform.position.x, -camera.transform.position.y, 0)
-		#
-		# 			coords = textRenderer.gameObject.transform.position
-		#
-		# 			textRenderer.x = int(coords.x)
-		# 			textRenderer.y = int(coords.y)
-		# 			textRenderer.draw()
-		#
-		# 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
-		# 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)

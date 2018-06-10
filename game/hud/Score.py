@@ -15,21 +15,18 @@ class Score(Label):
 
 		self.font_name = "Emulogic"
 		self.font_size = 18
-		self.text = "MARIO\n001100"
+		self.text = "MARIO\n{:06d}".format(self.score)
 		self.width = -1
 		self.multiline = True
 
 		DrawingManager().GUI.add(self)
 
 		self.addComponent(Input)
-		self.addScript(self.Sc)
 
-	class Sc(Script):
-		def onKeyPress(self, symbol, modifiers):
-			if symbol == pyglet.window.key.NUM_5:
-				from game.levels.LevelDeniss import LevelDeniss
-				SceneManager().loadScene(LevelDeniss)
+	def add(self, val):
+		self.score += val
+		self.text = "MARIO\n{:06d}".format(self.score)
 
-	def increment(self):
-		self.score += 1
+	def reset(self):
+		self.score = 0
 		self.text = "MARIO\n{:06d}".format(self.score)

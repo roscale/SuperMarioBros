@@ -7,7 +7,6 @@ class Transform(Component):
 		super().__init__()
 
 		self._position = Vector2()
-		self.depth = 0.0
 
 	@property
 	def position(self):

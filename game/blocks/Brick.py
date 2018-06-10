@@ -17,7 +17,7 @@ class Brick(Block):
 		spriteRenderer.setImage(Resources.theme[self.theme]["brick"])
 
 		self.getComponent(Collider).size = spriteRenderer.size
-		self.getComponent(Input).size = spriteRenderer.size
+		# self.getComponent(Input).size = spriteRenderer.size
 
 		self.itemClass = item
 

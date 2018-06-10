@@ -16,6 +16,9 @@ from gameengine.loaders.LevelLoader import LevelLoader
 
 
 class Level1_4(Scene):
+	major = 1
+	minor = 4
+
 	def onLoad(self):
 		if not World.findByTag("Score"):
 			score = World.instantiate(Score, (80, self.mainCamera.size.y - 50))

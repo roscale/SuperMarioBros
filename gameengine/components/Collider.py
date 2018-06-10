@@ -12,8 +12,6 @@ class Collider(Component, IResizable):
 		self._rect = Rect()
 		self._offset = Vector2()
 
-		self.isColliding = False
-
 	def transformPosChanged(self, sender, oldPos, newPos):
 		self.updateRect()
 

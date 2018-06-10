@@ -1,4 +1,5 @@
 from game.blocks.Grass import GrassLeft, GrassMiddle, GrassRight, Pillar
+from game.hud.Instructions import Instructions
 from game.misc.Castle import Castle
 from game.Player import Player
 from game.Resources import tileSize, tileSizeNum, Resources, setBgMusic
@@ -18,6 +19,7 @@ from game.powerups.Coin import Coin
 from game.powerups.PlayerUpgrade import PlayerUpgrade
 from game.powerups.SuperStar import SuperStar
 from game.scripts import FollowPlayer
+from game.technical.Liquid import Wave, Liquid
 from game.technical.Trigger import Trigger
 from gameengine.core.Scene import Scene
 from gameengine.core.World import World
@@ -51,6 +53,8 @@ def getClassByName(name: str) -> type:
 	if name == "FlagPoleHead": return FlagPoleHead
 	if name == "Flag": return Flag
 
+	if name == "Wave": return Wave
+	if name == "Liquid": return Liquid
 
 @World.collisionListener
 def collisionListener(first, second, side):
@@ -115,6 +119,9 @@ def collisionListener(first, second, side):
 
 
 class Level1_1(Scene):
+	major = 1
+	minor = 1
+
 	def onLoad(self):
 		if not World.findByTag("Score"):
 			score = World.instantiate(Score, (80, self.mainCamera.size.y - 50))
@@ -136,8 +143,10 @@ class Level1_1(Scene):
 			time = World.instantiate(Time, (1100, self.mainCamera.size.y - 50))
 			time.keepBetweenScenes = True
 
-		World.findByTag("Time")[0].fastMusic = Resources.owMusicFast
-
+		time = World.findByTag("Time")[0]
+		time.fastMusic = Resources.owMusicFast
+		time.time = 500
+		time.restart()
 
 		LevelLoader.loadMap("res/maps/level1-1.tmx", getClassByName)
 
@@ -179,10 +188,10 @@ class Level1_1(Scene):
 
 		if not World.findByTag("Player"):
 			player = World.instantiate(Player, (tileSizeNum * 5, onGroundY))
-			# player = World.instantiate(Player, (tileSizeNum * 175, onGroundY))
+			# player = World.instantiate(Player, (tileSizeNum * 170, onGroundY))
 			player.keepBetweenScenes = True
 
-		self.mainCamera.addScript(FollowPlayer, 187)
+		self.mainCamera.addScript(FollowPlayer, 185)
 		self.mainCamera.zoom = 3
 		self.mainCamera.backgroundColor = (107, 140, 255, 0)
 		self.mainCamera.transform.position = (-8, 0)
@@ -212,6 +221,11 @@ class Level1_1(Scene):
 
 		exitPipe.teleport = exit
 
+		from game.levels.Level1_2 import Level1_2
+		from game.levels.LevelSplash import LevelSplash
+		World.findByTag("Flag")[0].setNextScene(LevelSplash, Level1_2, 1, 2)
+
 		setBgMusic(Resources.owMusic).play()
 
+		World.instantiate(Instructions, (100, 400))
 

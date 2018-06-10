@@ -21,6 +21,8 @@ from gameengine.util.util import clamp
 
 
 class Player(GameObject):
+	lives = 3
+
 	def init(self):
 		self.tags.append("Player")
 		self.character = "mario"
@@ -51,6 +53,12 @@ class Player(GameObject):
 			self.getComponent(SpriteRenderer).opacity = 255
 
 		Timer.add(f, (), 2000, 0, 1)
+
+	def prepareDestroy(self):
+		movementScript = self.getScript(MovementScript)
+		if type(movementScript.state) != MovementScript.Die:
+			self.state = Small(self)
+			movementScript.state = MovementScript.Die(movementScript)
 
 
 class Small(IEvents):
@@ -155,49 +163,16 @@ class MainScript(Script):
 	def onKeyPress(self, symbol, modifiers):
 		self.gameObject.state.onKeyPress(symbol, modifiers)
 
-		import pyglet
-		if symbol == pyglet.window.key.F:
-			self.gameObject.state = Fire(self.gameObject)
-
-		elif symbol == pyglet.window.key.B:
-			self.gameObject.transform.position += (0, 8)
-			self.gameObject.state = Big(self.gameObject)
-
-		elif symbol == pyglet.window.key.S:
-			self.gameObject.state = Small(self.gameObject)
-
-		if symbol == pyglet.window.key.NUM_1:
-			from game.levels.Level1_1 import Level1_1
-			SceneManager().loadScene(Level1_1)
-			print("CHANGE")
-		# for gameObject in World.gameObjects:
-		# 	if not gameObject.keepBetweenScenes:
-		# 		World.destroy(gameObject)
-
-		elif symbol == pyglet.window.key.NUM_2:
-			from game.levels.Level1_2 import Level1_2
-			SceneManager().loadScene(Level1_2)
-
-		elif symbol == pyglet.window.key.NUM_3:
-			from game.levels.Level1_3 import Level1_3
-			SceneManager().loadScene(Level1_3)
-
-		elif symbol == pyglet.window.key.NUM_4:
-			from game.levels.Level1_4 import Level1_4
-			SceneManager().loadScene(Level1_4)
-
-		# elif symbol == pyglet.window.key.NUM_5:
-		# 	from game.levels.LevelDeniss import LevelDeniss
-		# 	SceneManager().loadScene(LevelDeniss)
-
-		if symbol == pyglet.window.key.U:
-			mainCamera = World.findByTag("MainCamera")[0]
-
-			mainCamera.backgroundColor = (0, 0, 0, 0)
-			mainCamera.transform.position = (-8, tileSizeNum * 16)
-			from game.scripts import FollowPlayer
-			mainCamera.getScript(FollowPlayer).enabled = False
-			self.gameObject.transform.position = (tileSizeNum * 2, tileSizeNum * 28)
+		# import pyglet
+		# if symbol == pyglet.window.key.F:
+		# 	self.gameObject.state = Fire(self.gameObject)
+		#
+		# elif symbol == pyglet.window.key.B:
+		# 	self.gameObject.transform.position += (0, 8)
+		# 	self.gameObject.state = Big(self.gameObject)
+		#
+		# elif symbol == pyglet.window.key.S:
+		# 	self.gameObject.state = Small(self.gameObject)
 
 class Checks(Script):
 	def init(self):
@@ -318,7 +293,7 @@ class MovementScript(Script):
 			self.script = script
 			self.player = script.gameObject
 
-			self.player.getComponent(Physics).velocity.y = 410
+			self.player.getComponent(Physics).velocity.y = 415
 
 			if str(self.player.state) == "Small":
 				Resources.jumpSmall.play().volume = 0.05
@@ -358,6 +333,7 @@ class MovementScript(Script):
 		def __init__(self, script):
 			self.script = script
 			self.player = script.gameObject
+			Player.lives -= 1
 
 			collider = self.player.getComponent(Collider)
 			print("die", collider.gameObject)
@@ -378,6 +354,22 @@ class MovementScript(Script):
 
 			Timer.add(f, (), 500, 0, 1)
 
+			def goToGameOver():
+				from game.levels.GameOverSplash import GameOverSplash
+				SceneManager().loadScene(GameOverSplash)
+
+			def resetLevel():
+				from game.levels.Level1_1 import Level1_1
+				from game.levels.LevelSplash import LevelSplash
+				World.findByTag("Time")[0].restart()
+
+				currentLevelClass = type(SceneManager().currentScene)
+				SceneManager().loadScene(LevelSplash, currentLevelClass, currentLevelClass.major, currentLevelClass.minor)
+
+			if self.player.lives <= 0:
+				Timer.add(goToGameOver, (), 4000, 0, 1)
+			else:
+				Timer.add(resetLevel, (), 4000, 0, 1)
 
 class ApplyDrag(Script):
 	def onLateUpdate(self):
@@ -467,6 +459,15 @@ class HandlePowerUps(Script):
 			elif "SuperStar" in other.tags:
 				self.gameObject.tags.append("Invincible")
 
+				Resources.bgMusic.pause()
+				p = Resources.star.play()
+				p.volume = 0.15
+
+				def f():
+					Resources.bgMusic.play()
+
+				p.set_handler("on_player_eos", f)
+
 				def f():
 					self.gameObject.tags.remove("Invincible")
 					state = str(self.gameObject.state)
@@ -479,6 +480,8 @@ class HandlePowerUps(Script):
 						self.gameObject.spriteSet = Resources.playerSprites["fire"]
 
 				Timer.add(f, (), 10000, 0, 1)
+
+
 
 	def onUpdate(self):
 		if "Invincible" in self.gameObject.tags:

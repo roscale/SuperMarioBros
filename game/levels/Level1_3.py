@@ -16,6 +16,9 @@ from gameengine.loaders.LevelLoader import LevelLoader
 
 
 class Level1_3(Scene):
+	major = 1
+	minor = 3
+
 	def onLoad(self):
 		if not World.findByTag("Score"):
 			score = World.instantiate(Score, (80, self.mainCamera.size.y - 50))
@@ -63,7 +66,16 @@ class Level1_3(Scene):
 			# player = World.instantiate(Player, (tileSizeNum * 120, onGroundY + tileSizeNum * 8))
 			player.keepBetweenScenes = True
 
-		self.mainCamera.addScript(FollowPlayer, 180)
+		World.findByTag("Player")[0].transform.position = (tileSizeNum * 5, onGroundY)
+		# World.findByTag("Player")[0].transform.position = (tileSizeNum * 130, onGroundY)
+
+		def restart():
+			Player.lives = 0
+			World.destroy(World.findByTag("Player")[0])
+
+		World.findByTag("Flag")[0].prepareNextLevel = restart
+
+		self.mainCamera.addScript(FollowPlayer, 138)
 		self.mainCamera.zoom = 3
 		self.mainCamera.backgroundColor = (107, 140, 255, 0)
 		self.mainCamera.transform.position = (-8, 0)

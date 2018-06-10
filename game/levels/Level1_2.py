@@ -8,15 +8,19 @@ from game.hud.Level import Level
 from game.hud.Score import Score
 from game.hud.Time import Time
 from game.levels.Level1_1 import getClassByName
+from game.levels.LevelSplash import LevelSplash
 from game.scripts import FollowPlayer
 from game.technical.Trigger import Trigger
 from gameengine.core.Scene import Scene
-from gameengine.core.Script import Script
 from gameengine.core.World import World
 from gameengine.loaders.LevelLoader import LevelLoader
+from gameengine.managers.SceneManager import SceneManager
 
 
 class Level1_2(Scene):
+	major = 1
+	minor = 2
+
 	def onLoad(self):
 		if not World.findByTag("Score"):
 			score = World.instantiate(Score, (80, self.mainCamera.size.y - 50))
@@ -109,9 +113,20 @@ class Level1_2(Scene):
 		World.instantiate(Platform, (tileSizeNum * 155, tileSizeNum * 7), Platform.UpOrDown, velocity=(0, 50))
 
 		if not World.findByTag("Player"):
-			# player = World.instantiate(Player, (tileSizeNum * 136, onGroundY+tileSizeNum * 4))
-			player = World.instantiate(Player, (tileSizeNum, onGroundY))
-			# player = World.instantiate(Player, (tileSizeNum * 35, onGroundY))
+			player = World.instantiate(Player, (tileSizeNum * 3, tileSizeNum * 12))
 			player.keepBetweenScenes = True
+
+		World.findByTag("Player")[0].transform.position = (tileSizeNum * 3, tileSizeNum * 12)
+
+		exitPipe = World.findByTag("Exit")[0]
+
+		def exit(player):
+			from game.levels.Level1_3 import Level1_3
+			SceneManager().loadScene(LevelSplash, Level1_3, 1, 3)
+
+		exitPipe.teleport = exit
+
+		# from game.levels.Level1_3 import Level1_3
+		# World.findByTag("Flag")[0].setNextLevel(Level1_3, 1, 3)
 
 		setBgMusic(Resources.ugMusic).play()

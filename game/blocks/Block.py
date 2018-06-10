@@ -28,15 +28,7 @@ class Block(GameObject, IBlock, ABC):
 		self.theme = theme
 
 		self.addComponent(Collider)
-		self.addComponent(Input)
-		self.addScript(ClickTrigger)
 		self.addScript(HitUpperEnemies)
-
-
-class ClickTrigger(Script):
-	def onMousePress(self, x, y, button, modifiers):
-		if button == 1:
-			self.gameObject.bigHit()
 
 
 class HitUpperEnemies(Script):

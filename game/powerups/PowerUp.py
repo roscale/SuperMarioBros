@@ -1,3 +1,5 @@
+from abc import ABC
+
 from game.Resources import Resources
 from game.scripts import DestroyOutOfWorld
 from gameengine.components.Collider import Collider
@@ -9,7 +11,7 @@ from gameengine.core.World import World
 from gameengine.managers.CollisionManager import Sides
 
 
-class PowerUp(GameObject):
+class PowerUp(GameObject, ABC):
 	def init(self, theme="ow", *args, **kwargs):
 		self.tags.append("PowerUp")
 

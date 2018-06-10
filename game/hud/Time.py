@@ -10,7 +10,7 @@ class Time(Label):
 	def init(self, *args, **kwargs):
 		self.tags.append("Time")
 
-		self.time = 999
+		self.time = 500
 
 		self.font_name = "Emulogic"
 		self.font_size = 18
@@ -48,6 +48,10 @@ class Time(Label):
 
 	def stop(self):
 		Timer.remove(self.countdown)
+
+	def restart(self):
+		Timer.remove(self.countdown)
+		self.countdown = Timer.add(self.decrement, (), 400, 400, -1)
 
 	def prepareDestroy(self):
 		self.stop()

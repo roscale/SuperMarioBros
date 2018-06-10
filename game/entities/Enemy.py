@@ -18,13 +18,11 @@ class Enemy(GameObject):
 		self.addComponent(SpriteRenderer).order = 1
 		self.theme = theme
 
-		self.addComponent(Physics)
+		self.addComponent(Physics).velocity.set(-30, 0)
 		self.addComponent(Collider)
 
 		self.addScript(DestroyOutOfWorld)
 		self.addScript(InverseXVelocity)
-
-		self.getComponent(Physics).velocity.set(-30, 0)
 
 	@abstractmethod
 	def playerSmash(self):

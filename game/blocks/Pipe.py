@@ -99,6 +99,9 @@ class HPipeHead(PipeHead):
 		self.addScript(self.HPipeHeadScript)
 
 	class HPipeHeadScript(Script):
+		def init(self, *args, **kwargs):
+			self.player = None
+
 		def onUpdate(self):
 			self.player = None
 

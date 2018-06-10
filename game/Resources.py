@@ -1,3 +1,4 @@
+from abc import ABC
 from pyglet import image
 from pyglet.image import AbstractImage, Animation, pyglet
 
@@ -28,9 +29,13 @@ def setBgMusic(res):
 	return Resources.bgMusic
 
 
-class Resources:
+class Resources(ABC):
 	pyglet.options['audio'] = ('openal', 'pulse', 'directsound', 'silent')
 	audioPath = "res/audio/"
+
+	pyglet.font.add_file("res/font.ttf")
+
+	# gameOverMusic = pyglet.media.load(audioPath + "", streaming=False)
 
 	owMusic = pyglet.media.load(audioPath + "ow.wav", streaming=False)
 	owMusicFast = pyglet.media.load(audioPath + "ow_fast.wav", streaming=False)
@@ -55,6 +60,9 @@ class Resources:
 
 	mariodie = pyglet.media.load(audioPath + "mariodie.wav", streaming=False)
 	hurryUp = pyglet.media.load(audioPath + "hurry_up.wav", streaming=False)
+
+	oneup = pyglet.media.load(audioPath + "1_up.wav", streaming=False)
+	star = pyglet.media.load(audioPath + "starlong.wav", streaming=False)
 
 	bgMusic = None
 
@@ -270,6 +278,8 @@ class Resources:
 
 		"castle": {
 			"ground": getRegion(tileset, 32, 80, tileSize),
+			"wave": getRegion(tileset, 48, 384, tileSize),
+			"liquid": getRegion(tileset, 48, 384+tileSizeNum, tileSize)
 		}
 	}
 

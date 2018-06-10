@@ -8,5 +8,5 @@ class Scene(ABC):
 		self.mainCamera: Camera = None
 
 	@abstractmethod
-	def onLoad(self):
+	def onLoad(self, *args, **kwargs):
 		pass

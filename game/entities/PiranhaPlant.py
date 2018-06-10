@@ -29,11 +29,7 @@ class PiranhaPlant(GameObject):
 		collider.size = sr.size
 		collider.offset = (8, 0)
 
-
 		self.addScript(self.PiranhaPlantScript)
-
-
-
 
 	class PiranhaPlantScript(Script):
 		def init(self, *args):
@@ -109,3 +105,5 @@ class PiranhaPlant(GameObject):
 		def onDestroy(self):
 			Timer.remove(self.showUpTimer)
 			Timer.remove(self.hideTimer)
+			from gameengine.core.World import World
+			World.findByTag("Score")[0].add(100)

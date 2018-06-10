@@ -1,6 +1,5 @@
-from game.entities.Enemy import Enemy
 from game.Resources import Resources
-from game.particles.Points import Points
+from game.entities.Enemy import Enemy
 from gameengine.components.Collider import Collider
 from gameengine.components.Physics import Physics
 from gameengine.components.SpriteRenderer import SpriteRenderer
@@ -27,7 +26,7 @@ class Goomba(Enemy):
 
 		Resources.stomp.play().volume = 0.05
 
-		# World.instantiate(Points, self.transform.position + (0, 5), number=1000)
+		World.findByTag("Score")[0].add(100)
 
 	def flip(self, flipSide):
 		super().flip(flipSide)
@@ -42,6 +41,8 @@ class Goomba(Enemy):
 		spriteRenderer = self.getComponent(SpriteRenderer)
 		spriteRenderer.setImage(Resources.theme[self.theme]["goombaFlipped"])
 		spriteRenderer.sprite.scale_y = -1
+
+		World.findByTag("Score")[0].add(100)
 
 		World.destroy(self, 1000)
 
