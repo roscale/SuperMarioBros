@@ -38,8 +38,10 @@ class Level1_2(Scene):
 			time = World.instantiate(Time, (1100, self.mainCamera.size.y - 50))
 			time.keepBetweenScenes = True
 
-		World.findByTag("Time")[0].fastMusic = Resources.ugMusicFast
-
+		time = World.findByTag("Time")[0]
+		time.fastMusic = Resources.ugMusicFast
+		time.time = 500
+		time.restart()
 
 		World.findByTag("Level")[0].major = 1
 		World.findByTag("Level")[0].minor = 2

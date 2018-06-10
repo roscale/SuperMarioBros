@@ -39,7 +39,11 @@ class Level1_3(Scene):
 		World.findByTag("Level")[0].major = 1
 		World.findByTag("Level")[0].minor = 3
 
-		World.findByTag("Time")[0].fastMusic = Resources.owMusicFast
+		time = World.findByTag("Time")[0]
+		time.fastMusic = Resources.owMusicFast
+		time.time = 500
+		time.restart()
+
 		setBgMusic(Resources.owMusic).play()
 
 		LevelLoader.loadMap("res/maps/level1-3.tmx", getClassByName)
